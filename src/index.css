@@ -1,0 +1,40 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,*::before, *::after{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 16px;
+  font-family: "Ubuntu", sans-serif;
+}
+
+
+.btn-radio input {
+  appearance: none;
+  width: 40px;
+  height: 18px;
+  background-color: hsl(213,96%,18%);
+  border-radius: 20px;
+  position: relative;
+  cursor: pointer;
+}
+
+.btn-radio input::before{
+  content: "";
+  width: 12px;
+  height: 12px;
+  background-color:  hsl(0,0%,100%);
+  position: absolute;
+  border-radius: 50%;
+  top: 3px;
+  left: 4px;
+  transition: left 0.3s ease;
+}
+
+.btn-radio input:checked::before{
+  left: 24px;
+}
