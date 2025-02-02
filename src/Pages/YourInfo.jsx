@@ -1,13 +1,36 @@
-import React from 'react'
+import React, { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { AppContext } from '../Context/ContextProvider';
 
 const YourInfo = () => {
+
+  const { data } = useContext(AppContext);
+  
 
   const navigate = useNavigate();
 
   const handleNextClick = () => {
     navigate("/select-plan")
   }
+
+  const [infoData, setInfoData] = useState({
+    name: "",
+    email: "",
+    number: "",
+  });
+
+  const handleInfoChange = (e) => {
+    const { name, value } = e.target;
+    setInfoData((prevData) => (
+      {
+        ...prevData, 
+        [name] : value,
+      }
+    ))
+  }
+
+  console.log("User info: ", infoData);
+
   return (
    <>
    <div className='flex flex-col gap-[16.1rem]'>
@@ -23,6 +46,8 @@ const YourInfo = () => {
         type="text" 
         name='name'
         placeholder='e.g. Stephen King'
+        value={infoData.name}
+        onChange={handleInfoChange}
         />
         </div>
 
@@ -33,6 +58,8 @@ const YourInfo = () => {
         type="text" 
         name='email'
         placeholder='e.g. stephenking@lorem.com'
+        value={infoData.email}
+        onChange={handleInfoChange}
         />
         </div>
 
@@ -43,6 +70,8 @@ const YourInfo = () => {
         type="number" 
         name='number'
         placeholder=' e.g. +1 234 567 890'
+        value={infoData.number}
+        onChange={handleInfoChange}
         />
         </div>
       </form>

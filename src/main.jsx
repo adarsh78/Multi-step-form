@@ -8,6 +8,7 @@ import SelectPlan from "./Pages/SelectPlan.jsx";
 import AddOns from "./Pages/AddOns.jsx";
 import Summary from "./Pages/Summary.jsx";
 import Thankyou from "./Pages/Thankyou.jsx";
+import ContextProvider from './Context/ContextProvider.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -23,6 +24,8 @@ const router = createBrowserRouter(
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <ContextProvider>
     <RouterProvider router={router}/>
+    </ContextProvider>
   </StrictMode>,
 )
