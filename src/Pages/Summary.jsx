@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AppContext } from "../Context/ContextProvider";
 
 const Summary = () => {
+  const { isYearly, selectedPlan, isChecked, setIsChecked } =
+    useContext(AppContext);
   const navigate = useNavigate();
 
   const handleBackClick = () => {
@@ -11,6 +14,30 @@ const Summary = () => {
   const handleNextClick = () => {
     navigate("/thankyou");
   };
+
+  const handleClick = () => {
+    navigate("/select-plan");
+  };
+
+  const allAddOns = (addOnsObject) => {
+    return Object.keys(addOnsObject).filter((key) => addOnsObject[key]);
+  };
+
+  let addOnsArray = allAddOns(isChecked);
+  console.log(addOnsArray);
+
+  const prices = {
+    onlineService: isYearly ? "10" : "1",
+    largerStorage: isYearly ? "20" : "2",
+    customizableProfile: isYearly ? "20" : "2",
+  };
+
+  const totalPrice =
+    parseInt(Number(selectedPlan[0]?.price.replace(/[^0-9]/g, "")) || "0", 10) + // Ensure price is parsed as an integer
+    addOnsArray.reduce((sum, addOn) => {
+      const addOnPrice = parseInt(prices[addOn] || "0", 10); // Parse add-on price
+      return sum + addOnPrice;
+    }, 0);
 
   return (
     <div className="flex flex-col gap-[16.7rem]">
@@ -27,37 +54,47 @@ const Summary = () => {
             <div className="flex justify-between items-center mb-2">
               <div>
                 <p className="text-[hsl(213,96%,18%)] font-medium text-[14px]">
-                  Arcade (Monthly)
+                  {selectedPlan[0]?.name} ({isYearly ? "Yearly" : "Monthly"})
                 </p>
-                <p className="text-[hsl(231,11%,63%)] font-medium text-[14px] underline cursor-pointer">
+                <span
+                  onClick={handleClick}
+                  className="text-[hsl(231,11%,63%)] font-medium text-[14px] underline cursor-pointer"
+                >
                   Change
-                </p>
+                </span>
               </div>
 
               <div>
                 <span className="text-[hsl(213,96%,18%)] font-medium text-[15px]">
-                  $9/mo
+                  {selectedPlan[0]?.price}
                 </span>
               </div>
             </div>
             <hr />
 
             <div className="mt-3 flex flex-col gap-2">
-              <div className="flex justify-between">
-                <p className="text-[hsl(231,11%,63%)] font-medium text-[14px]">Online service</p>
-                <p className="text-[hsl(213,96%,18%)] font-medium text-[14px]">+$1/mo</p>
-              </div>
-
-              <div className="flex justify-between">
-                <p className="text-[hsl(231,11%,63%)] font-medium text-[14px]">Larger storage</p>
-                <p className="text-[hsl(213,96%,18%)] font-medium text-[14px]">+$2/mo</p>
-              </div>
+              {addOnsArray.map((arr) => (
+                <div className="flex justify-between" key={arr}>
+                  <p className="text-[hsl(231,11%,63%)] font-medium text-[14px]">
+                    {arr}
+                  </p>
+                  <p className="text-[hsl(213,96%,18%)] font-medium text-[14px]">
+                    +${prices[arr]}
+                    {isYearly ? "/yr" : "/mo"}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
 
           <div className="flex justify-between px-4 mt-3">
-            <p className="text-[hsl(231,11%,63%)] font-medium text-[14px]">Total (per month)</p>
-            <p className="text-[hsl(243,100%,62%)] font-bold text-[15px]">+$12/mo</p>
+            <p className="text-[hsl(231,11%,63%)] font-medium text-[14px]">
+              Total ({isYearly ? "per year" : "per month"})
+            </p>
+            <p className="text-[hsl(243,100%,62%)] font-bold text-[15px]">
+              +${totalPrice}
+              {isYearly ? "/yr" : "/mo"}
+            </p>
           </div>
         </div>
       </div>
